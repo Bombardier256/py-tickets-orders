@@ -103,8 +103,9 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
             queryset = queryset.select_related()
             queryset = (queryset.annotate(
                 tickets_available=F("cinema_hall__rows")
-                                  * F("cinema_hall__seats_in_row")
-                                  - Count("tickets")))
+                * F("cinema_hall__seats_in_row")
+                - Count("tickets"))
+            )
 
         return queryset.distinct()
 
@@ -118,16 +119,16 @@ class OrderViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         if self.action == "list":
             return (self.queryset.filter(user=self.request.user)
-            .prefetch_related(
-                "tickets__movie_session",
-                "tickets__movie_session__cinema_hall",
-                "tickets__movie_session__movie"
-            ))
+                .prefetch_related(
+                    "tickets__movie_session",
+                    "tickets__movie_session__cinema_hall",
+                    "tickets__movie_session__movie")
+            )
         elif self.action == "retrieve":
             return (self.queryset.filter(user=self.request.user)
-            .prefetch_related(
-                "tickets__movie_session"
-            ))
+                .prefetch_related(
+                    "tickets__movie_session")
+            )
         return queryset
 
     def get_serializer_class(self):
@@ -139,4 +140,3 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
