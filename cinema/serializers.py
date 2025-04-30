@@ -1,5 +1,6 @@
 from django.db import transaction
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from cinema.models import (
     Genre,
@@ -104,7 +105,7 @@ class MovieSessionDetailSerializer(MovieSessionSerializer):
             "movie",
             "cinema_hall",
             "tickets",
-            "taken_places"
+            "taken_places",
         )
 
 

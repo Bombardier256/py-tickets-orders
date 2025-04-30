@@ -42,7 +42,7 @@ class CinemaHallViewSet(viewsets.ModelViewSet):
 
 
 class MovieViewSet(viewsets.ModelViewSet):
-    queryset = Movie.objects
+    queryset = Movie.objects.all()
     serializer_class = MovieSerializer
 
     def get_serializer_class(self):
@@ -100,7 +100,7 @@ class MovieSessionViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(movie_id=int(movie))
 
         if self.action == "list":
-            queryset = queryset.select_related()
+            queryset = queryset.select_related("movie", "cinema_hall")
             queryset = (queryset.annotate(
                 tickets_available=F("cinema_hall__rows")
                 * F("cinema_hall__seats_in_row")
